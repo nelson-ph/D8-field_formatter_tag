@@ -1,0 +1,7 @@
+name: Field formatter tag
+type: module
+description: "Provides custom HTML tag settings for field formatters."
+core: 8.x
+package: Field Formatters
+dependencies:
+ - field

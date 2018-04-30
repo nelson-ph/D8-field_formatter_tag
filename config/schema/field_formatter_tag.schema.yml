@@ -1,0 +1,8 @@
+field.formatter.third_party.field_formatter_tag:
+  type: mapping
+  label: 'Field Formatter Tag entity display settings'
+  mapping:
+    tag:
+      type: string
+      label: Tag
+

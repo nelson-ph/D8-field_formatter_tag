@@ -1,0 +1,19 @@
+{
+    "name": "nelson-ph/field_formatter_tag",
+    "description": "Provides custom HTML tag settings for field formatters.",
+    "type": "drupal-module",
+    "homepage": "https://github.com/nelson-ph/field_formatter_tag",
+    "require-dev": {
+        "phpro/grumphp": "^0.14.0",
+        "jakub-onderka/php-parallel-lint": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nelson PIRES HASSANALI",
+            "email": "nelson.hassanali@gmail.com"
+        }
+    ],
+    "require": {
+    }
+}
