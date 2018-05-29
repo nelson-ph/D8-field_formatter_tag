@@ -41,7 +41,7 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
 
   $element['tag'] = [
     '#type' => 'select',
-    '#options' => array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
+    '#options' => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
     '#title' => t('Field Formatter Tag'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'tag'),
   ];
@@ -53,7 +53,7 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
 
   $element['label_tag'] = [
     '#type' => 'select',
-    '#options' => array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
+    '#options' => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
     '#title' => t('Field Formatter Label Tag'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'label_tag'),
   ];
