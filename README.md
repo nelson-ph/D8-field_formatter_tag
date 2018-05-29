@@ -10,7 +10,6 @@ Provides custom HTML tag settings for field formatters.
 
 1. Finish Readme.md
 2. Add to packagist
-3. Move container_tag to a separate module
 
 ## License
 

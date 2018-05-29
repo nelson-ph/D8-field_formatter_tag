@@ -5,3 +5,4 @@ core: 8.x
 package: Field Formatters
 dependencies:
  - field
+ - container_tag

@@ -3,6 +3,9 @@
     "description": "Provides custom HTML tag settings for field formatters.",
     "type": "drupal-module",
     "homepage": "https://github.com/nelson-ph/field_formatter_tag",
+    "require": {
+      "nelson-ph/container_tag":"^8.x-1.x"
+    },
     "require-dev": {
         "phpro/grumphp": "^0.14.0",
         "jakub-onderka/php-parallel-lint": "^1.0"
