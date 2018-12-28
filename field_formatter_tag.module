@@ -15,10 +15,12 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 function field_formatter_tag_field_formatter_settings_summary_alter(&$summary, $context) {
 
   foreach ([
-             'tag' => 'Tag',
-             'tag_class' => 'Tag Class',
-             'label_tag' => 'Label Tag',
-             'label_tag_class' => 'Label Tag Class',
+             'tag'                => 'Tag',
+             'tag_class'          => 'Tag Class',
+             'label_tag'          => 'Label Tag',
+             'label_tag_class'    => 'Label Tag Class',
+             'wrapper_class'      => 'Field Wrapper Class',
+             'wrapper_item_class' => 'Field Wrapper Item Class',
            ] as $param => $label) {
     $setting = $context['formatter']->getThirdPartySetting('field_formatter_tag', $param);
 
@@ -39,29 +41,46 @@ function field_formatter_tag_field_formatter_settings_summary_alter(&$summary, $
  */
 function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\Core\Field\FormatterInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $view_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
 
-  $element['tag'] = [
-    '#type' => 'select',
-    '#options' => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
-    '#title' => t('Field Formatter Tag'),
+  $element['tag']       = [
+    '#type'          => 'select',
+    '#options'       => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
+    '#title'         => t('Field Formatter Tag'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'tag'),
   ];
   $element['tag_class'] = [
-    '#type' => 'textfield',
-    '#title' => t('Field Formatter Tag Class'),
-    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'tag_class', 'tag-class-wrapper'),
+    '#type'          => 'textfield',
+    '#title'         => t('Field Formatter Tag Class'),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'tag_class', ''),
+    '#placeholder'   => 'tag-class-wrapper',
   ];
 
-  $element['label_tag'] = [
-    '#type' => 'select',
-    '#options' => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
-    '#title' => t('Field Formatter Label Tag'),
+  $element['label_tag']       = [
+    '#type'          => 'select',
+    '#options'       => [NULL => t('None')] + array_combine(Xss::getAdminTagList(), Xss::getAdminTagList()),
+    '#title'         => t('Field Formatter Label Tag'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'label_tag'),
   ];
   $element['label_tag_class'] = [
-    '#type' => 'textfield',
-    '#title' => t('Field Formatter Tag Class'),
-    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'label_tag_class', 'label-tag-class-wrapper'),
+    '#type'          => 'textfield',
+    '#title'         => t('Field Formatter Label Class'),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'label_tag_class', ''),
+    '#placeholder'   => 'label-tag-class-wrapper',
   ];
+
+  $element['wrapper_class'] = [
+    '#type'          => 'textfield',
+    '#title'         => t('Field Wrapper Class'),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_wrapper_class', 'wrapper_class', ''),
+    '#placeholder'   => 'field-wrapper-items',
+  ];
+
+  $element['wrapper_item_class'] = [
+    '#type'          => 'textfield',
+    '#title'         => t('Field Wrapper Item Class'),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_wrapper_item_class', 'wrapper_item_class', ''),
+    '#placeholder'   => 'field-wrapper-item',
+  ];
+
   return $element;
 }
 
@@ -74,20 +93,20 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
 function field_formatter_tag_preprocess_field(&$variables) {
 
   // Get a few convenient handles.
-  $entity = $variables['element']['#object'];
+  $entity     = $variables['element']['#object'];
   $field_name = $variables['element']['#field_name'];
-  $view_mode = $variables['element']['#view_mode'];
+  $view_mode  = $variables['element']['#view_mode'];
 
   // Drill down to field formatter settings.
   $render_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-  $field_display = $render_display->getComponent($field_name);
+  $field_display  = $render_display->getComponent($field_name);
 
   // Add class for whole field.
   if (isset($field_display['third_party_settings']['field_formatter_tag'])) {
     if (!empty($field_display['third_party_settings']['field_formatter_tag']['tag'])) {
       foreach (\Drupal\Core\Render\Element::children($variables['items']) as $child) {
         $variables['items'][$child]['content']['#theme_wrappers']['container_tag'] = [
-          '#tag' => Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag']),
+          '#tag'        => Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag']),
           '#attributes' => [
             'class' => Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['tag_class'] : 'tag-class-wrapper'),
           ],
@@ -96,13 +115,31 @@ function field_formatter_tag_preprocess_field(&$variables) {
     }
     if (!empty($field_display['third_party_settings']['field_formatter_tag']['label_tag'])) {
       $variables['label'] = [
-        '#type' => 'html_tag',
-        '#tag' => $field_display['third_party_settings']['field_formatter_tag']['label_tag'],
-        '#value' => $variables['label'],
+        '#type'       => 'html_tag',
+        '#tag'        => $field_display['third_party_settings']['field_formatter_tag']['label_tag'],
+        '#value'      => $variables['label'],
         '#attributes' => [
           'class' => Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['label_tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['label_tag_class'] : 'label-tag-class-wrapper'),
         ],
       ];
+    }
+
+    if (!empty($field_display['third_party_settings']['field_formatter_tag']['wrapper_class'])) {
+      $variables['attributes']['class'][] = $field_display['third_party_settings']['field_formatter_tag']['wrapper_class'];
+
+      $item_class = implode('-', [
+        $field_display['third_party_settings']['field_formatter_tag']['wrapper_class'],
+        'item',
+      ]);
+
+      if (!empty($field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'])) {
+        $item_class = $field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'];
+      }
+
+      foreach (\Drupal\Core\Render\Element::children($variables['items']) as $child) {
+        $variables['items'][$child]['attributes']->addClass($item_class);
+      }
+
     }
 
   }
