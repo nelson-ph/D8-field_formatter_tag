@@ -70,14 +70,14 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
   $element['wrapper_class'] = [
     '#type'          => 'textfield',
     '#title'         => t('Field Wrapper Class'),
-    '#default_value' => $plugin->getThirdPartySetting('field_formatter_wrapper_class', 'wrapper_class', ''),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'wrapper_class', ''),
     '#placeholder'   => 'field-wrapper-items',
   ];
 
   $element['wrapper_item_class'] = [
     '#type'          => 'textfield',
     '#title'         => t('Field Wrapper Item Class'),
-    '#default_value' => $plugin->getThirdPartySetting('field_formatter_wrapper_item_class', 'wrapper_item_class', ''),
+    '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'wrapper_item_class', ''),
     '#placeholder'   => 'field-wrapper-item',
   ];
 
