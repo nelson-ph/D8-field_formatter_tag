@@ -121,6 +121,9 @@ function field_formatter_tag_preprocess_field(&$variables) {
             $variables['items'][$child]['content']['#options']['attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
             break;
           case isset($variables['items'][$child]['content']['#attributes']):
+            if(empty($variables['items'][$child]['content']['#attributes']['class'])){
+              $variables['items'][$child]['content']['#attributes']['class'] = [];
+            }
             $variables['items'][$child]['content']['#attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
             break;
           default:
