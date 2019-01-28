@@ -75,7 +75,7 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
   ];
 
   $element['wrapper_item_class'] = [
-    '#type'          => 'textfield',
+    '#type'          => 'textarea',
     '#title'         => t('Field Wrapper Item Class'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'wrapper_item_class', ''),
     '#placeholder'   => 'field-wrapper-item',
@@ -113,17 +113,14 @@ function field_formatter_tag_preprocess_field(&$variables) {
         ];
       }
     }
-    elseif (!empty($field_display['third_party_settings']['field_formatter_tag']['tag_class'])){
+    elseif (!empty($field_display['third_party_settings']['field_formatter_tag']['tag_class'])) {
       foreach (\Drupal\Core\Render\Element::children($variables['items']) as $child) {
 
-        switch (true){
+        switch (TRUE) {
           case isset($variables['items'][$child]['content']['#options']['attributes']):
             $variables['items'][$child]['content']['#options']['attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
             break;
           case isset($variables['items'][$child]['content']['#attributes']):
-            if(empty($variables['items'][$child]['content']['#attributes']['class'])){
-              $variables['items'][$child]['content']['#attributes']['class'] = [];
-            }
             $variables['items'][$child]['content']['#attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
             break;
           default:
@@ -155,11 +152,70 @@ function field_formatter_tag_preprocess_field(&$variables) {
         $item_class = $field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'];
       }
 
-      foreach (\Drupal\Core\Render\Element::children($variables['items']) as $child) {
-        $variables['items'][$child]['attributes']->addClass($item_class);
-      }
+      _field_formatter_tag_add_item_wrappers($item_class, $variables['items']);
 
+    }
+    else {
+      if (!empty($field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'])) {
+        _field_formatter_tag_add_item_wrappers($field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'], $variables['items']);
+      }
     }
 
   }
+}
+
+/**
+ * @param string $class
+ * @param array $items
+ */
+function _field_formatter_tag_add_item_wrappers($class, array &$items) {
+  $item_class = explode("\r\n", $class);
+
+  switch (TRUE) {
+    case count($item_class) > 1:
+      foreach (\Drupal\Core\Render\Element::children($items) as $child) {
+        $items[$child]['attributes']->addClass(reset($item_class));
+
+        $items[$child]['content'] = _field_formatter_tag_build_item_wrappers(array_slice($item_class, 1), $items[$child]['content']);
+
+      }
+      break;
+
+    default:
+      foreach (\Drupal\Core\Render\Element::children($items) as $child) {
+        $items[$child]['attributes']->addClass($item_class);
+      }
+      break;
+  }
+}
+
+/**
+ * @param array $classes_array
+ * @param array $item_child
+ *
+ * @return array
+ */
+function _field_formatter_tag_build_item_wrappers(array $classes_array, array $item_child) {
+  $build = [
+    '#type'       => 'container',
+    '#attributes' => [
+      'class' => [
+        reset($classes_array),
+      ],
+    ],
+  ];
+
+  if (empty(array_slice($classes_array, 1))) {
+    $build['child'] = $item_child;
+
+    return $build;
+  }
+
+  $next_classes = array_slice($classes_array, 1);
+  $next_key     = reset($next_classes);
+
+  $build[$next_key] = _field_formatter_tag_build_item_wrappers($next_classes, $item_child);
+
+  return $build;
+
 }
