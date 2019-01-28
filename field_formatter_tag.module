@@ -77,6 +77,7 @@ function field_formatter_tag_field_formatter_third_party_settings_form(\Drupal\C
   $element['wrapper_item_class'] = [
     '#type'          => 'textarea',
     '#title'         => t('Field Wrapper Item Class'),
+    '#description'   => t('Add a class per line if you would like to have multiple containers, ex div.class_line_1 > div.class_line_2'),
     '#default_value' => $plugin->getThirdPartySetting('field_formatter_tag', 'wrapper_item_class', ''),
     '#placeholder'   => 'field-wrapper-item',
   ];
