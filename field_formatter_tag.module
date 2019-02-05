@@ -144,10 +144,15 @@ function field_formatter_tag_preprocess_field(&$variables) {
     if (!empty($field_display['third_party_settings']['field_formatter_tag']['wrapper_class'])) {
       $variables['attributes']['class'][] = $field_display['third_party_settings']['field_formatter_tag']['wrapper_class'];
 
-      $item_class = implode('-', [
-        $field_display['third_party_settings']['field_formatter_tag']['wrapper_class'],
-        'item',
-      ]);
+      $item_class = [];
+      foreach(explode(' ', $field_display['third_party_settings']['field_formatter_tag']['wrapper_class']) as $part){
+        $item_class[] = implode('-', [
+          $part,
+          'item',
+        ]);
+      }
+      $item_class = implode(' ', $item_class);
+
 
       if (!empty($field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'])) {
         $item_class = $field_display['third_party_settings']['field_formatter_tag']['wrapper_item_class'];
