@@ -109,7 +109,9 @@ function field_formatter_tag_preprocess_field(&$variables) {
         $variables['items'][$child]['content']['#theme_wrappers']['container_tag'] = [
           '#tag'        => Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag']),
           '#attributes' => [
-            'class' => Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['tag_class'] : 'tag-class-wrapper'),
+            'class' => [
+              Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['tag_class'] : 'tag-class-wrapper'),
+            ],
           ],
         ];
       }
@@ -136,7 +138,9 @@ function field_formatter_tag_preprocess_field(&$variables) {
         '#tag'        => $field_display['third_party_settings']['field_formatter_tag']['label_tag'],
         '#value'      => $variables['label'],
         '#attributes' => [
-          'class' => Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['label_tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['label_tag_class'] : 'label-tag-class-wrapper'),
+          'class' => [
+            Html::escape(isset($field_display['third_party_settings']['field_formatter_tag']['label_tag_class']) ? $field_display['third_party_settings']['field_formatter_tag']['label_tag_class'] : 'label-tag-class-wrapper'),
+          ],
         ],
       ];
     }
@@ -145,7 +149,7 @@ function field_formatter_tag_preprocess_field(&$variables) {
       $variables['attributes']['class'][] = $field_display['third_party_settings']['field_formatter_tag']['wrapper_class'];
 
       $item_class = [];
-      foreach(explode(' ', $field_display['third_party_settings']['field_formatter_tag']['wrapper_class']) as $part){
+      foreach (explode(' ', $field_display['third_party_settings']['field_formatter_tag']['wrapper_class']) as $part) {
         $item_class[] = implode('-', [
           $part,
           'item',
