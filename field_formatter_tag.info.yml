@@ -1,7 +1,7 @@
 name: Field formatter tag
 type: module
 description: "Provides custom HTML tag settings for field formatters."
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: Field Formatters
 dependencies:
  - field
