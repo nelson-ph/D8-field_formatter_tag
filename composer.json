@@ -8,7 +8,7 @@
     },
     "require-dev": {
         "phpro/grumphp": "*",
-        "jakub-onderka/php-parallel-lint": "*"
+        "php-parallel-lint/php-parallel-lint": "*"
     },
     "license": "MIT",
     "authors": [
