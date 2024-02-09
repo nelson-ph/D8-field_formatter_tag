@@ -119,17 +119,16 @@ function field_formatter_tag_preprocess_field(&$variables) {
     elseif (!empty($field_display['third_party_settings']['field_formatter_tag']['tag_class'])) {
       foreach (\Drupal\Core\Render\Element::children($variables['items']) as $child) {
 
-        switch (TRUE) {
-          case isset($variables['items'][$child]['content']['#options']['attributes']):
-            $variables['items'][$child]['content']['#options']['attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
-            break;
-          case isset($variables['items'][$child]['content']['#attributes']):
-            $variables['items'][$child]['content']['#attributes']['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
-            break;
-          default:
-            $variables['items'][$child]['attributes']->addClass(Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']));
-            break;
-        }
+          $attributes = $variables['items'][$child]['content']['#options']['attributes']
+            ?? $variables['items'][$child]['content']['#attributes']
+            ?? $variables['items'][$child]['attributes'];
+
+          if($attributes instanceof \Drupal\Core\Template\Attribute\Attribute) {
+              $attributes->addClass(Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']));
+          }
+          if(is_array($attributes)) {
+              $attributes['class'][] = Html::escape($field_display['third_party_settings']['field_formatter_tag']['tag_class']);
+          }
       }
     }
     if (!empty($field_display['third_party_settings']['field_formatter_tag']['label_tag'])) {
